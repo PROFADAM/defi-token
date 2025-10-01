@@ -1,3 +1,7 @@
+/**
+ * Test suite for MyToken ERC20 contract
+ */
+
 const { expect } = require("chai");
 const { ethers } = require("hardhat");
 
