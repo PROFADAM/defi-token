@@ -28,6 +28,9 @@ contract MyToken is ERC20, ERC20Burnable, Ownable {
      * @param to Address to receive tokens
      * @param amount Amount of tokens to mint
      */
+    /**
+     * @notice Mints new tokens to specified address
+     */
     function mint(address to, uint256 amount) public onlyOwner {
         require(totalSupply() + amount <= MAX_SUPPLY, "Would exceed max supply");
         _mint(to, amount);
