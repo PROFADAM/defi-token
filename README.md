@@ -28,3 +28,10 @@ An ERC20 token implementation with minting and burning capabilities.
 
 npm install
 
+## Tech Stack
+
+- Solidity ^0.8.20
+- Hardhat
+- OpenZeppelin Contracts
+- Ethers.js
+
