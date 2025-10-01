@@ -1,3 +1,8 @@
+/**
+ * Deployment script for MyToken contract
+ * Run: npx hardhat run scripts/deploy.js
+ */
+
 const hre = require("hardhat");
 
 async function main() {
