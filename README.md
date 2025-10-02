@@ -47,3 +47,10 @@ MIT
 
 - Contract is audited for common vulnerabilities
 - Uses OpenZeppelin's battle-tested implementations
+
+## Supported Networks
+
+- Ethereum Mainnet
+- Polygon
+- BSC
+- Base
