@@ -37,6 +37,9 @@ contract MyToken is ERC20, ERC20Burnable, Ownable {
     }
     
     /**
+     * @notice Returns the amount of tokens that can still be minted
+     */
+    /**
      * @dev Get remaining mintable supply
      * @return Amount of tokens that can still be minted
      */
