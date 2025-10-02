@@ -1,6 +1,6 @@
 {
   "name": "defi-token",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "ERC20 token with minting and burning capabilities",
   "main": "index.js",
   "scripts": {
