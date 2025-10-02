@@ -94,3 +94,9 @@ For questions and support, please open an issue on GitHub.
 - `npm test` - Run all tests
 - `npm run compile` - Compile contracts
 - `npm run deploy` - Deploy to network
+
+## Deployment
+
+Local network:
+```bash
+npx hardhat run scripts/deploy.js --network localhost
