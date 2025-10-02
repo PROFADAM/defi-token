@@ -88,3 +88,9 @@ A: Any token holder can burn their own tokens.
 ## Contact
 
 For questions and support, please open an issue on GitHub.
+
+## Available Scripts
+
+- `npm test` - Run all tests
+- `npm run compile` - Compile contracts
+- `npm run deploy` - Deploy to network
