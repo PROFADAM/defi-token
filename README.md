@@ -54,3 +54,8 @@ MIT
 - Polygon
 - BSC
 - Base
+
+## Requirements
+
+- Node.js >= 18.0.0
+- npm or yarn
