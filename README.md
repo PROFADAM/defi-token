@@ -59,3 +59,10 @@ MIT
 
 - Node.js >= 18.0.0
 - npm or yarn
+
+## Roadmap
+
+- [x] Basic ERC20 implementation
+- [x] Minting and burning
+- [ ] Governance features
+- [ ] Staking mechanism
