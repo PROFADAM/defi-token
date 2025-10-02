@@ -74,3 +74,7 @@ A: No, there's a maximum supply cap of 1,000,000 tokens.
 
 **Q: Who can burn tokens?**
 A: Any token holder can burn their own tokens.
+
+## Contact
+
+For questions and support, please open an issue on GitHub.
