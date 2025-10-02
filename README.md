@@ -21,7 +21,16 @@ An ERC20 token implementation with minting and burning capabilities.
 
 \- Built with Hardhat and OpenZeppelin
 
+## Quick Start
+```bash
+# Clone the repository
+git clone https://github.com/PROFADAM/defi-token.git
 
+# Install dependencies
+npm install
+
+# Run tests
+npm test
 
 \## Installation
 
