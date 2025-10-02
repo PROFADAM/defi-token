@@ -1,6 +1,7 @@
 \# DeFi Token Project
 
-
+![Solidity](https://img.shields.io/badge/Solidity-0.8.20-blue)
+![License](https://img.shields.io/badge/license-MIT-green)
 
 An ERC20 token implementation with minting and burning capabilities.
 
