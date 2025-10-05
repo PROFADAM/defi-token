@@ -12,7 +12,14 @@
     "type": "git",
     "url": "git+https://github.com/PROFADAM/defi-token.git"
   },
-  "keywords": ["blockchain", "ethereum", "erc20", "token", "defi", "solidity"],
+  "keywords": [
+    "blockchain",
+    "ethereum",
+    "erc20",
+    "token",
+    "defi",
+    "solidity"
+  ],
   "author": "",
   "license": "ISC",
   "bugs": {
@@ -24,6 +31,7 @@
     "hardhat": "^2.19.4"
   },
   "dependencies": {
-    "@openzeppelin/contracts": "^5.4.0"
+    "@openzeppelin/contracts": "^5.4.0",
+    "dotenv": "^17.2.3"
   }
 }
