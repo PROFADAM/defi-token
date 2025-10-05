@@ -72,21 +72,28 @@ contract MyToken is ERC20, ERC20Burnable, Ownable, ReentrancyGuard {
         require(amount > 0, "Cannot stake 0 tokens");
         require(balanceOf(msg.sender) >= amount, "Insufficient balance");
         
-        // Update rewards if already staking
+        // Calculate rewards if already staking
+        uint256 reward = 0;
         if (stakes[msg.sender].amount > 0) {
-            uint256 reward = calculateReward(msg.sender);
-            if (reward > 0) {
-                stakes[msg.sender].claimedRewards += reward;
-                _mint(msg.sender, reward);
-            }
+            reward = calculateReward(msg.sender);
         } else {
             // Initialize stake record if first time staking
             stakes[msg.sender].since = block.timestamp;
         }
         
+        // Update state variables (CEI pattern)
+        if (reward > 0) {
+            stakes[msg.sender].claimedRewards += reward;
+        }
+        
         // Update stake amount
         stakes[msg.sender].amount += amount;
         totalStaked += amount;
+        
+        // External interactions after state changes
+        if (reward > 0) {
+            _mint(msg.sender, reward);
+        }
         
         // Transfer tokens to contract
         _transfer(msg.sender, address(this), amount);
@@ -102,10 +109,10 @@ contract MyToken is ERC20, ERC20Burnable, Ownable, ReentrancyGuard {
         require(amount > 0, "Cannot unstake 0 tokens");
         require(stakes[msg.sender].amount >= amount, "Insufficient staked amount");
         
-        // Calculate and pay rewards
+        // Calculate rewards
         uint256 reward = calculateReward(msg.sender);
         
-        // Update staking data
+        // Update staking data - CEI (Checks-Effects-Interactions) pattern
         stakes[msg.sender].amount -= amount;
         totalStaked -= amount;
         
@@ -119,6 +126,10 @@ contract MyToken is ERC20, ERC20Burnable, Ownable, ReentrancyGuard {
         // Update claimed rewards
         if (reward > 0) {
             stakes[msg.sender].claimedRewards += reward;
+        }
+        
+        // External interactions after state changes (CEI pattern)
+        if (reward > 0) {
             _mint(msg.sender, reward);
             emit RewardPaid(msg.sender, reward);
         }
@@ -133,16 +144,17 @@ contract MyToken is ERC20, ERC20Burnable, Ownable, ReentrancyGuard {
      * @notice Claim staking rewards without unstaking
      */
     function claimRewards() external nonReentrant {
-        require(stakes[msg.sender].amount > 0, "No staked tokens");
+        StakeInfo storage stakeInfo = stakes[msg.sender];
+        require(stakeInfo.amount > 0, "No staked tokens");
         
         uint256 reward = calculateReward(msg.sender);
         require(reward > 0, "No rewards to claim");
         
-        // Update staking timestamp
-        stakes[msg.sender].since = block.timestamp;
-        stakes[msg.sender].claimedRewards += reward;
+        // Update state variables first (CEI pattern)
+        stakeInfo.since = block.timestamp;
+        stakeInfo.claimedRewards += reward;
         
-        // Mint rewards
+        // External interaction after state changes
         _mint(msg.sender, reward);
         
         emit RewardPaid(msg.sender, reward);
@@ -154,14 +166,17 @@ contract MyToken is ERC20, ERC20Burnable, Ownable, ReentrancyGuard {
      * @return Pending reward amount
      */
     function calculateReward(address staker) public view returns (uint256) {
-        if (stakes[staker].amount == 0) {
+        StakeInfo storage stakeInfo = stakes[staker];
+        
+        // Early return to save gas
+        if (stakeInfo.amount == 0) {
             return 0;
         }
         
-        uint256 stakingDuration = block.timestamp - stakes[staker].since;
-        uint256 rewardPercentage = (rewardRate * stakingDuration) / REWARD_INTERVAL;
+        uint256 stakingDuration = block.timestamp - stakeInfo.since;
         
-        return (stakes[staker].amount * rewardPercentage) / 100;
+        // Optimize calculation to reduce gas usage
+        return (stakeInfo.amount * rewardRate * stakingDuration) / (REWARD_INTERVAL * 100);
     }
     
     /**
