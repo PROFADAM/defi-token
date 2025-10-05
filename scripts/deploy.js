@@ -27,6 +27,8 @@ async function main() {
   console.log("📊 Initial supply:", hre.ethers.formatEther(initialSupply), "MTK");
   console.log("🏭 Max supply:", hre.ethers.formatEther(await myToken.MAX_SUPPLY()), "MTK");
   console.log("👤 Owner:", await myToken.owner());
+  console.log("🔄 Staking reward rate:", (await myToken.rewardRate()).toString(), "% per year");
+  console.log("💰 Total staked:", hre.ethers.formatEther(await myToken.totalStaked()), "MTK");
   
   // Verify contract on explorer (if not local network)
   if (hre.network.name !== "hardhat" && hre.network.name !== "localhost") {

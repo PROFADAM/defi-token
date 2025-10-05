@@ -1,25 +1,19 @@
-\# DeFi Token Project
+# DeFi Token Project
 
 ![Solidity](https://img.shields.io/badge/Solidity-0.8.20-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
-An ERC20 token implementation with minting and burning capabilities.
+An ERC20 token implementation with minting, burning, and staking capabilities for DeFi applications.
 
+## Features
 
-
-\## Features
-
-
-
-\- ERC20 standard compliance
-
-\- Token minting (owner only)
-
-\- Token burning
-
-\- Maximum supply cap
-
-\- Built with Hardhat and OpenZeppelin
+- ERC20 standard compliance
+- Token minting (owner only)
+- Token burning
+- Maximum supply cap
+- Staking with annual rewards
+- Reward claiming
+- Built with Hardhat and OpenZeppelin
 
 ## Quick Start
 ```bash
@@ -44,6 +38,32 @@ npm install
 - Hardhat
 - OpenZeppelin Contracts
 - Ethers.js
+
+## Staking Functionality
+
+The token includes a staking mechanism with the following features:
+
+- Stake tokens to earn rewards
+- Annual reward rate (default: 10%)
+- Claim rewards without unstaking
+- View pending rewards
+- Adjustable reward rate (owner only)
+
+### Staking Example
+
+```javascript
+// Stake tokens
+await myToken.stake(ethers.parseEther("1000"));
+
+// Check staking info
+const [amount, since, claimedRewards] = await myToken.getStakeInfo(userAddress);
+
+// Claim rewards
+await myToken.claimRewards();
+
+// Unstake tokens
+await myToken.unstake(ethers.parseEther("500"));
+```
 
 ## Contributing
 

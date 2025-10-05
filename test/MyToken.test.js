@@ -1,9 +1,10 @@
 /**
- * Test suite for MyToken ERC20 contract
+ * Test suite for MyToken ERC20 contract with staking functionality
  */
 
 const { expect } = require("chai");
 const { ethers } = require("hardhat");
+const { time } = require("@nomicfoundation/hardhat-network-helpers");
 
 describe("MyToken Contract", function () {
   let myToken;
@@ -12,6 +13,7 @@ describe("MyToken Contract", function () {
   let addr2;
   const INITIAL_SUPPLY = ethers.parseEther("100000");
   const MAX_SUPPLY = ethers.parseEther("1000000");
+  const ONE_YEAR = 365 * 24 * 60 * 60; // 365 days in seconds
 
   beforeEach(async function () {
     [owner, addr1, addr2] = await ethers.getSigners();
@@ -122,6 +124,80 @@ describe("MyToken Contract", function () {
       await expect(
         myToken.connect(addr1).transferOwnership(addr2.address)
       ).to.be.reverted;
+    });
+  });
+
+  describe("Staking", function () {
+    const stakeAmount = ethers.parseEther("1000");
+    
+    beforeEach(async function () {
+      // Transfer tokens to addr1 for staking tests
+      await myToken.transfer(addr1.address, ethers.parseEther("10000"));
+    });
+
+    it("Should allow users to stake tokens", async function () {
+      await myToken.connect(addr1).stake(stakeAmount);
+      
+      const stakeInfo = await myToken.getStakeInfo(addr1.address);
+      expect(stakeInfo[0]).to.equal(stakeAmount);
+      expect(await myToken.totalStaked()).to.equal(stakeAmount);
+    });
+
+    it("Should not allow staking zero tokens", async function () {
+      await expect(myToken.connect(addr1).stake(0)).to.be.revertedWith("Cannot stake 0 tokens");
+    });
+
+    it("Should not allow staking more than balance", async function () {
+      const excessAmount = ethers.parseEther("20000");
+      await expect(myToken.connect(addr1).stake(excessAmount)).to.be.revertedWith("Insufficient balance");
+    });
+
+    it("Should allow users to unstake tokens", async function () {
+      await myToken.connect(addr1).stake(stakeAmount);
+      await myToken.connect(addr1).unstake(stakeAmount);
+      
+      const stakeInfo = await myToken.getStakeInfo(addr1.address);
+      expect(stakeInfo[0]).to.equal(0);
+      expect(await myToken.totalStaked()).to.equal(0);
+    });
+
+    it("Should not allow unstaking more than staked", async function () {
+      await myToken.connect(addr1).stake(stakeAmount);
+      await expect(myToken.connect(addr1).unstake(stakeAmount * 2n)).to.be.reverted;
+    });
+
+    it("Should generate rewards after staking period", async function () {
+      await myToken.connect(addr1).stake(stakeAmount);
+      
+      // Fast forward time by 6 months
+      await time.increase(ONE_YEAR / 2);
+      
+      // Calculate expected reward (5% for half a year)
+      const expectedReward = (stakeAmount * 5n) / 100n;
+      
+      // Check calculated reward
+      const pendingReward = await myToken.calculateReward(addr1.address);
+      expect(pendingReward).to.be.closeTo(expectedReward, ethers.parseEther("1"));
+      
+      // Claim rewards
+      await myToken.connect(addr1).claimRewards();
+      
+      // Check claimed rewards
+      const stakeInfo = await myToken.getStakeInfo(addr1.address);
+      expect(stakeInfo[2]).to.be.closeTo(expectedReward, ethers.parseEther("1"));
+    });
+
+    it("Should allow owner to update reward rate", async function () {
+      await myToken.setRewardRate(20);
+      expect(await myToken.rewardRate()).to.equal(20);
+    });
+
+    it("Should not allow non-owner to update reward rate", async function () {
+      await expect(myToken.connect(addr1).setRewardRate(20)).to.be.reverted;
+    });
+
+    it("Should not allow setting reward rate above 100%", async function () {
+      await expect(myToken.setRewardRate(101)).to.be.revertedWith("Rate cannot exceed 100%");
     });
   });
 });

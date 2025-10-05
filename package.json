@@ -4,10 +4,9 @@
   "description": "ERC20 token with minting and burning capabilities",
   "main": "index.js",
   "scripts": {
-  "test": "hardhat test",
-  "compile": "hardhat compile",
-  "deploy": "hardhat run scripts/deploy.js"
-},},
+    "test": "hardhat test",
+    "compile": "hardhat compile",
+    "deploy": "hardhat run scripts/deploy.js"
   },
   "repository": {
     "type": "git",
@@ -21,8 +20,8 @@
   },
   "homepage": "https://github.com/PROFADAM/defi-token#readme",
   "devDependencies": {
-    "@nomicfoundation/hardhat-toolbox": "^6.1.0",
-    "hardhat": "^3.0.6"
+    "@nomicfoundation/hardhat-toolbox": "^4.0.0",
+    "hardhat": "^2.19.4"
   },
   "dependencies": {
     "@openzeppelin/contracts": "^5.4.0"
